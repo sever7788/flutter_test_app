@@ -11,10 +11,12 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
 void main() async {
+  //initializing HydratedBloc to work with SharedPreferences
   WidgetsFlutterBinding.ensureInitialized();
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory: await getApplicationDocumentsDirectory(),
   );
+  //Registering the repository API with get_it
   GetIt.I.registerLazySingleton(() => DummyRepository(dio: Dio()));
 
   runApp(const MainApp());
@@ -28,11 +30,13 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
+  //Creating states for the general list of products and carts
   final _productsListBloc = ProductsListBloc(GetIt.I<DummyRepository>());
   final _purchasesMapBloc = PurchasesMapBloc();
 
   @override
   void initState() {
+    //request for a list of products
     _productsListBloc.add(LoadProductsList());
     super.initState();
   }
